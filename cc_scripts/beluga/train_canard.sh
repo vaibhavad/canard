@@ -86,7 +86,6 @@ do
                         -src $DATA_DIR/"$name"-src.txt \
                         -output "$PREDICTION_DIR/"$name".txt" \
                         -min_length 3 \
-                        -verbose \
                         -stepwise_penalty \
                         -coverage_penalty summary \
                         -beta 5 \

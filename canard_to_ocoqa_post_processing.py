@@ -2,8 +2,10 @@ import json
 from glob import glob
 
 CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations'
-TARGET_FILE = 'ocoqa-trg.txt'
+REWRITES_FILE = 'data/ocoqa-qrecc.txt'
+TARGET_DIR = 'rewrites/qrecc_model/'
 MIN_CONV_LENGTH = 10
+MIN_ANNOTATION_LENGTH = 3
 
 def main():
 
@@ -15,13 +17,13 @@ def main():
         with open(file, 'r') as f:
             conv = json.load(f)
             conv["id"] = file.split('/')[-1]
-            if len(conv["turns"]) >= MIN_CONV_LENGTH:
+            if len(conv["turns"]) >= MIN_CONV_LENGTH and 'additional_answers' in conv and len(conv["additional_answers"]) >= MIN_ANNOTATION_LENGTH:
                 convs.append(conv)
 
     src_ques = []
     trg_ques = []
 
-    with open(TARGET_FILE, 'r') as f:
+    with open(REWRITES_FILE, 'r') as f:
         for line in f:
             trg_ques.append(line.strip())
 
@@ -39,7 +41,7 @@ def main():
 
     for i, line in enumerate(src_ques):
         if not line["id"] == conv_id:
-            with open("canard_rewrites/" + conv_id, 'w') as f:
+            with open(TARGET_DIR + conv_id, 'w') as f:
                 for q in ques:
                     f.write(q)
                     f.write('\n')

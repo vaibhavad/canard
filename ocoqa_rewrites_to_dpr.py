@@ -4,14 +4,14 @@ from spacy.lang.en import English
 from glob import glob
 
 CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations'
-CANARD_REWRITES_DIR = 'canard_rewrites'
-TARGET_FILE = 'ocoqa-trg.txt'
+REWRITES_DIR = 'rewrites/canard_model'
+DPR_OUTPUT_FILE = 'data/ocoqa_canard_dpr_format.csv'
 MIN_CONV_LENGTH = 10
 
 def main():
 
     ids = []
-    files = glob(CANARD_REWRITES_DIR + '/*')
+    files = glob(REWRITES_DIR + '/*')
     for file in files:
         ids.append(file.split('/')[-1])
 
@@ -22,7 +22,7 @@ def main():
 
     for id in ids:
         rewrites = []
-        with open(CANARD_REWRITES_DIR + '/' + id, 'r') as rewrite_f:
+        with open(REWRITES_DIR + '/' + id, 'r') as rewrite_f:
             for line in rewrite_f:
                 rewrites.append(line.strip())
 
@@ -32,7 +32,7 @@ def main():
             for i,turn in enumerate(conv["turns"]):
                 if i%2 == 1:
                     answer = []
-                    answer.append(turn["text"])
+                    answer.append(turn["text"].strip('.'))
                     answers.append(answer)
         
         assert len(rewrites) >= len(answers)
@@ -49,7 +49,7 @@ def main():
         csv_rewrites.extend(rewrites)
         csv_answers.extend(answers)
 
-    with open('ocoqa_dpr_format.csv', 'w') as f:
+    with open(DPR_OUTPUT_FILE, 'w') as f:
         for i,rewrite in enumerate(csv_rewrites):
             f.write(rewrite.lower().strip('?').strip())
             f.write('\t')

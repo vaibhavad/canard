@@ -25,7 +25,6 @@ pip install . --no-index
 
 DATA_DIR=$SCRATCH/canard/data/seq2seq
 MODEL_PATH=$SCRATCH/canard/models/canard_models/model
-GLOVE_DIR=$SCRATCH/canard/glove
 PREDICTION_DIR=$SCRATCH/canard/predictions/canard_predictions
 
 for name in dev test

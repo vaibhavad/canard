@@ -25,7 +25,6 @@ pip install . --no-index
 
 DATA_DIR=$SCRATCH/canard/data/qrecc
 MODEL_PATH=$SCRATCH/canard/models/qrecc_models/model
-GLOVE_DIR=$SCRATCH/canard/glove
 PREDICTION_DIR=$SCRATCH/canard/predictions/qrecc_predictions
 
 for name in dev test

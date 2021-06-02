@@ -23,15 +23,20 @@ def main():
                                         args.split), 'w') as srch:
         with open(join(args.output_dir,'{}-tgt.txt').format(\
                                         args.split), 'w') as tgth:
+            first_question = None
             for sample in samples:
-                src = ' ||| '.join(sample['History']+[sample['Question']])
-                tgt = sample['Rewrite']
-                if args.spacy:
-                    src = ' '.join([tok.text for tok in nlp(src)])
-                    tgt = ' '.join([tok.text for tok in nlp(tgt)])
+                assert len(sample['History']) >= 2
+                if len(sample['History']) == 2:
+                    first_question = sample["Rewrite"]
+                else:
+                    src = ' ||| '.join([first_question] + sample['History'][3:] + [sample['Question']])
+                    tgt = sample['Rewrite']
+                    if args.spacy:
+                        src = ' '.join([tok.text for tok in nlp(src)])
+                        tgt = ' '.join([tok.text for tok in nlp(tgt)])
 
-                srch.write(src+'\n')
-                tgth.write(tgt+'\n')
+                    srch.write(src+'\n')
+                    tgth.write(tgt+'\n')
 
 if __name__ == "__main__":
     main()

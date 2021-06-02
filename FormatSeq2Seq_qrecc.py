@@ -18,16 +18,18 @@ def main():
 
     with open(args.dataset_file) as inh:
         samples = json.load(inh)
+        num_convs = samples[-1]["Conversation_no"]
         if args.make_dev_from_train:
-            num_dev_samples = round(float(args.dev_percent)/100.0 * len(samples))
-            dev_idxs = random.sample(range(len(samples)), num_dev_samples)
+            num_dev_convs = round(float(args.dev_percent)/100.0 * num_convs)
+            dev_convs_idxs = random.sample(range(1, num_convs+1), num_dev_convs)
             train_samples = []
             dev_samples = []
-            for i,x in enumerate(samples):
-                if i in dev_idxs:
-                    dev_samples.append(x)
+            for sample in samples:
+                if sample["Conversation_no"] in dev_convs_idxs:
+                    dev_samples.append(sample)
                 else:
-                    train_samples.append(x)
+                    train_samples.append(sample)
+
     if args.make_dev_from_train:
         info = [(train_samples, args.split), (dev_samples, 'dev')]
     else:
@@ -42,15 +44,19 @@ def main():
                                             split), 'w') as srch:
             with open(join(args.output_dir,'{}-tgt.txt').format(\
                                             split), 'w') as tgth:
+                first_question = None
                 for sample in instances:
-                    src = ' ||| '.join(sample['Context']+[sample['Question']])
-                    tgt = sample['Rewrite']
-                    if args.spacy:
-                        src = ' '.join([tok.text for tok in nlp(src)])
-                        tgt = ' '.join([tok.text for tok in nlp(tgt)])
+                    if len(sample['Context']) == 0:
+                        first_question = sample["Rewrite"]
+                    else:
+                        src = ' ||| '.join(sample['Context']+[sample['Question']])
+                        tgt = sample['Rewrite']
+                        if args.spacy:
+                            src = ' '.join([tok.text for tok in nlp(src)])
+                            tgt = ' '.join([tok.text for tok in nlp(tgt)])
 
-                    srch.write(src+'\n')
-                    tgth.write(tgt+'\n')
+                        srch.write(src+'\n')
+                        tgth.write(tgt+'\n')
 
 if __name__ == "__main__":
     main()

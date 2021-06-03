@@ -47,9 +47,11 @@ def main():
                 first_question = None
                 for sample in instances:
                     if len(sample['Context']) == 0:
-                        first_question = sample["Rewrite"]
+                        history = []
+                        history.append(sample["Rewrite"])
+                        history.append(sample["Answer"])
                     else:
-                        src = ' ||| '.join(sample['Context']+[sample['Question']])
+                        src = ' ||| '.join(history+[sample['Question']])
                         tgt = sample['Rewrite']
                         if args.spacy:
                             src = ' '.join([tok.text for tok in nlp(src)])
@@ -57,6 +59,8 @@ def main():
 
                         srch.write(src+'\n')
                         tgth.write(tgt+'\n')
+                        history.append(sample['Question'])
+                        history.append(sample["Answer"])
 
 if __name__ == "__main__":
     main()

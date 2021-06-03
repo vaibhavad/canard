@@ -1,3 +1,6 @@
+# python FormatT5_qrecc.py data/qrecc/qrecc_train.json train data/T5 --make_dev_from_train --dev_percent 10
+# python FormatT5_qrecc.py data/qrecc/qrecc_test.json test data/T5
+
 import json
 import argparse
 import random
@@ -10,7 +13,6 @@ def main():
     parser.add_argument("dataset_file")
     parser.add_argument("split")
     parser.add_argument("output_dir")
-    parser.add_argument("--spacy", default=True)
     parser.add_argument("--make_dev_from_train", action='store_true')
     parser.add_argument("--dev_percent", type=int, default=10)
 
@@ -34,32 +36,23 @@ def main():
         info = [(train_samples, args.split), (dev_samples, 'dev')]
     else:
         info = [(samples, args.split)]
-
-
-    if args.spacy:
-        nlp = English()
     
     for instances, split in info:
-        with open(join(args.output_dir,'{}-src.txt').format(\
+        with open(join(args.output_dir,'trans_qrecc_{}.json').format(\
                                             split), 'w') as srch:
-            with open(join(args.output_dir,'{}-tgt.txt').format(\
-                                            split), 'w') as tgth:
-                for sample in instances:
-                    if len(sample['Context']) == 0:
-                        history = []
-                        history.append(sample["Rewrite"])
-                        history.append(sample["Answer"])
-                    else:
-                        src = ' ||| '.join(history+[sample['Question']])
-                        tgt = sample['Rewrite']
-                        if args.spacy:
-                            src = ' '.join([tok.text for tok in nlp(src)])
-                            tgt = ' '.join([tok.text for tok in nlp(tgt)])
+            for sample in instances:
+                if len(sample['Context']) == 0:
+                    history = []
+                    history.append(sample["Rewrite"])
+                    history.append(sample["Answer"])
+                else:
+                    src = ' SEP '.join(history+[sample['Question']])
+                    tgt = sample['Rewrite']
+                    obj = {"translation" : {"en1": src, "en2": tgt}}
+                    srch.write(json.dumps(obj)+'\n')
 
-                        srch.write(src+'\n')
-                        tgth.write(tgt+'\n')
-                        history.append(sample['Question'])
-                        history.append(sample["Answer"])
+                    history.append(sample['Question'])
+                    history.append(sample["Answer"])
 
 if __name__ == "__main__":
     main()

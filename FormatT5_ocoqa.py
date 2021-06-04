@@ -4,7 +4,7 @@ from spacy.lang.en import English
 from glob import glob
 
 CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations'
-OUTPUT_FILE = 'data/ocoqa-src.txt'
+OUTPUT_FILE = 'data/T5/trans_ocoqa_test.json'
 MIN_CONV_LENGTH = 10
 MIN_ANNOTATION_LENGTH = 3
 
@@ -28,9 +28,9 @@ def main():
 
             for i, turn in enumerate(conv["turns"]):
                 if i % 2 == 0:
-                    src = ' ||| '.join(history + [turn["text"]])
-                    src = ' '.join([tok.text for tok in nlp(src)])
-                    srch.write(src+'\n')
+                    src = ' SEP '.join(history + [turn["text"]])
+                    obj = {"translation" : {"en1": src, "en2": ""}}
+                    srch.write(json.dumps(obj)+'\n')
                 if turn["text"] == 'UNANSWERABLE':
                     # pass
                     turn["text"] = "I don't know."

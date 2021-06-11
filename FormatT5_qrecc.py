@@ -1,5 +1,5 @@
-# python FormatT5_qrecc.py data/qrecc/qrecc_train.json train data/T5 --make_dev_from_train --dev_percent 10
-# python FormatT5_qrecc.py data/qrecc/qrecc_test.json test data/T5
+# python FormatT5_qrecc.py data/release/qrecc_train.json train data/T5 --make_dev_from_train --dev_percent 10
+# python FormatT5_qrecc.py data/release/qrecc_test.json test data/T5
 
 import json
 import argparse
@@ -43,6 +43,10 @@ def main():
             for sample in instances:
                 if len(sample['Context']) == 0:
                     history = []
+                    src = ' SEP '.join(history+[sample['Rewrite']])
+                    tgt = sample['Rewrite']
+                    obj = {"translation" : {"en1": src, "en2": tgt}}
+                    srch.write(json.dumps(obj)+'\n')
                     history.append(sample["Rewrite"])
                     history.append(sample["Answer"])
                 else:

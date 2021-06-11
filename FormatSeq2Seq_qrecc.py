@@ -47,6 +47,14 @@ def main():
                 for sample in instances:
                     if len(sample['Context']) == 0:
                         history = []
+                        src = ' ||| '.join(history+[sample['Rewrite']])
+                        tgt = sample['Rewrite']
+                        if args.spacy:
+                            src = ' '.join([tok.text for tok in nlp(src)])
+                            tgt = ' '.join([tok.text for tok in nlp(tgt)])
+
+                        srch.write(src+'\n')
+                        tgth.write(tgt+'\n')
                         history.append(sample["Rewrite"])
                         history.append(sample["Answer"])
                     else:

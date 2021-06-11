@@ -19,13 +19,17 @@ def main():
     with open(args.dataset_file) as inh:
         samples = json.load(inh)
 
-    with open(join(args.output_dir,'trans_{}.json').format(\
+    with open(join(args.output_dir,'trans_canard_{}.json').format(\
                                         args.split), 'w') as srch:
         first_question = None
         for sample in samples:
             assert len(sample['History']) >= 2
             if len(sample['History']) == 2:
                 first_question = sample["Rewrite"]
+                src = ' SEP '.join([first_question])
+                tgt = sample['Rewrite']
+                obj = {"translation" : {"en1": src, "en2": tgt}}
+                srch.write(json.dumps(obj)+'\n')
             else:
                 src = ' SEP '.join([first_question] + sample['History'][3:] + [sample['Question']])
                 tgt = sample['Rewrite']

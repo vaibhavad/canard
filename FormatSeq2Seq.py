@@ -28,6 +28,14 @@ def main():
                 assert len(sample['History']) >= 2
                 if len(sample['History']) == 2:
                     first_question = sample["Rewrite"]
+                    src = ' ||| '.join([first_question])
+                    tgt = sample['Rewrite']
+                    if args.spacy:
+                        src = ' '.join([tok.text for tok in nlp(src)])
+                        tgt = ' '.join([tok.text for tok in nlp(tgt)])
+
+                    srch.write(src+'\n')
+                    tgth.write(tgt+'\n')
                 else:
                     src = ' ||| '.join([first_question] + sample['History'][3:] + [sample['Question']])
                     tgt = sample['Rewrite']

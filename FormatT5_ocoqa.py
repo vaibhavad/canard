@@ -29,7 +29,7 @@ def main():
             for i, turn in enumerate(conv["turns"]):
                 if i % 2 == 0:
                     src = ' SEP '.join(history + [turn["text"]])
-                    obj = {"translation" : {"en1": src, "en2": ""}}
+                    obj = {"translation" : {"en1": src, "en2": "What is life?"}}
                     srch.write(json.dumps(obj)+'\n')
                 if turn["text"] == 'UNANSWERABLE':
                     # pass

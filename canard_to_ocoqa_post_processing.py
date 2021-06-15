@@ -1,11 +1,15 @@
 import json
 from glob import glob
+from datetime import datetime, timedelta
 
-CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations'
-REWRITES_FILE = 'data/ocoqa-qrecc.txt'
-TARGET_DIR = 'rewrites/qrecc_model/'
+CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations_2'
+REWRITES_FILE = 'data/results/ocoqa-test-t5-qrecc.txt'
+TARGET_DIR = 'rewrites/t5/qrecc_model/'
 MIN_CONV_LENGTH = 10
 MIN_ANNOTATION_LENGTH = 3
+IST_TIME_OFFSET = 9.5
+END_DATE = '2021-06-07'
+end_date = datetime.strptime(END_DATE + " 23:59:59", '%Y-%m-%d %H:%M:%S')
 
 def main():
 
@@ -16,8 +20,9 @@ def main():
     for file in files:
         with open(file, 'r') as f:
             conv = json.load(f)
+            ist_timestamp = datetime.strptime(conv["timestamp"], '%Y-%m-%d %H:%M:%S') +  timedelta(hours = IST_TIME_OFFSET)
             conv["id"] = file.split('/')[-1]
-            if len(conv["turns"]) >= MIN_CONV_LENGTH and 'additional_answers' in conv and len(conv["additional_answers"]) >= MIN_ANNOTATION_LENGTH:
+            if (len(conv["turns"]) >= MIN_CONV_LENGTH and 'additional_answers' in conv and len(conv["additional_answers"]) >= MIN_ANNOTATION_LENGTH) and ist_timestamp <= end_date:
                 convs.append(conv)
 
     src_ques = []

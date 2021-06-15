@@ -1,11 +1,9 @@
 import json
-from os.path import join
-from spacy.lang.en import English
 from glob import glob
 
-CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations'
-REWRITES_DIR = 'rewrites/canard_model'
-DPR_OUTPUT_FILE = 'data/ocoqa_canard_dpr_format.csv'
+CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations_2'
+REWRITES_DIR = 'rewrites/t5/qrecc_model'
+DPR_OUTPUT_FILE = 'data/ocoqa_test_t5_qrecc.csv'
 MIN_CONV_LENGTH = 10
 
 def main():

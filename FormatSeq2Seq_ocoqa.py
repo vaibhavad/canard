@@ -3,8 +3,8 @@ from os.path import join
 from spacy.lang.en import English
 from glob import glob
 
-CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations'
-OUTPUT_FILE = 'data/ocoqa-src.txt'
+CONV_DIR = '/Users/vaibhav/Coqoa/final_conversations_2'
+OUTPUT_FILE = 'data/ocoqa/ocoqa-src.txt'
 MIN_CONV_LENGTH = 10
 MIN_ANNOTATION_LENGTH = 3
 

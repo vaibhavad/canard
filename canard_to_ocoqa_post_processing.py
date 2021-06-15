@@ -42,17 +42,31 @@ def main():
     assert len(src_ques) == len(trg_ques)
 
     conv_id = src_ques[0]["id"]
-    ques = []
+    rewrite_ques = []
+    original_ques = []
 
-    for i, line in enumerate(src_ques):
-        if not line["id"] == conv_id:
+    for i, ques in enumerate(src_ques):
+        if not ques["id"] == conv_id:
+            assert len(original_ques) == len(rewrite_ques)
             with open(TARGET_DIR + conv_id, 'w') as f:
-                for q in ques:
+                f.write(original_ques[0])
+                f.write('\n')
+                for q in rewrite_ques[1:]:
                     f.write(q)
                     f.write('\n')
-            ques = []
-            conv_id = line["id"]
-        ques.append(trg_ques[i])
+            rewrite_ques = []
+            original_ques = []
+            conv_id = ques["id"]
+        rewrite_ques.append(trg_ques[i])
+        original_ques.append(ques["text"])
+
+    assert len(original_ques) == len(rewrite_ques)
+    with open(TARGET_DIR + conv_id, 'w') as f:
+        f.write(original_ques[0])
+        f.write('\n')
+        for q in rewrite_ques[1:]:
+            f.write(q)
+            f.write('\n')
 
 if __name__ == "__main__":
     main()
